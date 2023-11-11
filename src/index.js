@@ -7,6 +7,7 @@ import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import { Api } from './components/Api';
 import { Song } from './components/Song';
 import { Summary } from './components/Summary';
+import { MyMusic } from './components/MyMusic';
 
 const router = createBrowserRouter([
   {
@@ -24,7 +25,11 @@ const router = createBrowserRouter([
   {
     path: "/summary",
     element: <Summary />,
-  }
+  },
+  {
+    path: "/mymusic",
+    element: <MyMusic />,
+  },
 ]);
 
 const root = ReactDOM.createRoot(document.getElementById('root'));

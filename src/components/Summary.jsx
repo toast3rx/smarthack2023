@@ -12,6 +12,7 @@ import {
 } from "recharts";
 import { SongItem } from "./SongItem";
 import { LastPlayed } from "./LastPlayed";
+import { useNavigate } from "react-router";
 
 const data = [
   {
@@ -61,6 +62,8 @@ const data = [
 export const Summary = () => {
   const [date, setDate] = useState(new Date());
 
+  const navigate = useNavigate();
+
   return (
     <Grid container style={{ padding: "40px" }}>
       {/* TITLE */}
@@ -91,12 +94,8 @@ export const Summary = () => {
           <Grid item xs={12} style={{ marginTop: "40px" }}>
             <LineChart width={300} height={200} data={data}>
               <CartesianAxis strokeDasharray="3 3" />
-              <XAxis
-                interval={6}
-				type="category"
-                
-              />
-              <YAxis tick={false} type="number" domain={[0, 60]} />
+              <XAxis interval={6} type="category" />
+              <YAxis interval={3}  type="number" domain={[0, 60]} />
               <Tooltip />
               <Line dot={false} dataKey="uv" stroke="#dbb82a" strokeWidth={4} />
             </LineChart>
@@ -111,9 +110,8 @@ export const Summary = () => {
           <Grid item xs={12}>
             <div className="last-played">Last played</div>
           </Grid>
-          <></>
           <Grid item xs={12}>
-            <LastPlayed />
+            <LastPlayed length={3} />
           </Grid>
         </Grid>
       </Grid>
@@ -121,7 +119,12 @@ export const Summary = () => {
       <Grid item xs={12}>
         <Grid container>
           <Grid item xs={12} style={{ marginTop: "20px" }}>
-            <button className="button-play">Start Playing</button>
+            <button
+              onClick={() => navigate("/mymusic")}
+              className="button-play"
+            >
+              Start Playing
+            </button>
           </Grid>
         </Grid>
       </Grid>

@@ -1,29 +1,118 @@
 import { Divider, Grid } from "@mui/material";
 import "./styles/LastPlayed.css";
 import { SongItem } from "./SongItem";
-
-export const LastPlayed = () => {
-  const songs = [
-    {
-      title: "Song Title",
-      author: "Song Author",
-      score: "80%",
-    },
-    {
-      title: "Song Title",
-      author: "Song Author",
-      score: "80%",
-    },
-    {
-      title: "Song Title",
-      author: "Song Author",
-      score: "80%",
-    },
-  ];
-
+const songs = [
+  {
+    title: "Song Title",
+    author: "Song Author",
+    score: "80%",
+  },
+  {
+    title: "Song Title",
+    author: "Song Author",
+    score: "80%",
+  },
+  {
+    title: "Song Title",
+    author: "Song Author",
+    score: "80%",
+  },
+  {
+    title: "Song Title",
+    author: "Song Author",
+    score: "80%",
+  },
+  {
+    title: "Song Title",
+    author: "Song Author",
+    score: "80%",
+  },
+  {
+    title: "Song Title",
+    author: "Song Author",
+    score: "80%",
+  },
+  {
+    title: "Song Title",
+    author: "Song Author",
+    score: "80%",
+  },
+  {
+    title: "Song Title",
+    author: "Song Author",
+    score: "80%",
+  },
+  {
+    title: "Song Title",
+    author: "Song Author",
+    score: "80%",
+  },
+  {
+    title: "Song Title",
+    author: "Song Author",
+    score: "80%",
+  },
+  {
+    title: "Song Title",
+    author: "Song Author",
+    score: "80%",
+  },
+  {
+    title: "Song Title",
+    author: "Song Author",
+    score: "80%",
+  },
+  {
+    title: "Song Title",
+    author: "Song Author",
+    score: "80%",
+  },
+  {
+    title: "Song Title",
+    author: "Song Author",
+    score: "80%",
+  },
+  {
+    title: "Song Title",
+    author: "Song Author",
+    score: "80%",
+  },
+  {
+    title: "Song Title",
+    author: "Song Author",
+    score: "80%",
+  },
+  {
+    title: "Song Title",
+    author: "Song Author",
+    score: "80%",
+  },
+  {
+    title: "Song Title",
+    author: "Song Author",
+    score: "80%",
+  },
+  {
+    title: "Song Title",
+    author: "Song Author",
+    score: "80%",
+  },
+  {
+    title: "Song Title",
+    author: "Song Author",
+    score: "80%",
+  },
+  {
+    title: "Song Title",
+    author: "Song Author",
+    score: "80%",
+  },
+];
+export const LastPlayed = ({length = songs.length}) => {
+  
   return (
     <Grid container className="songs-container">
-      {songs.map((song, index) =>
+      {songs.slice(0, length).map((song, index) =>
         index !== songs.length - 1 ? (
           <>
             <SongItem
