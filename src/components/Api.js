@@ -5,11 +5,14 @@ export const Api = () => {
     }
 
     async function wavCompare() {
-        readAudio("data/ref1_16.wav");
+        readAudio("/data/ref1_16.wav");
     }
 
     async function readAudio(url) {
-        let audioData = await fetch(url).then(r => r.arrayBuffer());
+        let audioData = await fetch(url).then(r => {
+			console.log(r); // 'audio/wav'
+			return r.arrayBuffer();
+		});
         console.log(`${audioData.length}`);
         let audioCtx = new AudioContext({sampleRate:8000});
         // audio is resampled to the AudioContext's sampling rate
