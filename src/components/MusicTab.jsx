@@ -1,4 +1,4 @@
-import { Grid } from "@mui/material";
+import { Dialog, DialogTitle, Grid, List } from "@mui/material";
 import "./styles/MusicTab.css";
 import MusicNoteIcon from "@mui/icons-material/MusicNote";
 import { useEffect, useState } from "react";
@@ -28,40 +28,6 @@ It cannot [C]wait, I'm sure
 There's no [G]need to compli[D]cate
 Our time is [Em]short
 This is our [C]fate, I'm yours`,
-
-    `[G]Doo do do doo doo do, [D]doo do doo do [Em]doo do
-Do you want to come on,[D] scooch on over [C]closer, dear
-And I will nibble your [A7]ear`,
-
-    `I've been spending [G]way too long checking my tongue in the mirror
-And [D]bending over backwards just to try to see it clearer
-But [Em]my breath fogged up the glass
-And so I [C]drew a new face and I laughed
-I [G]guess what I'll be saying is there ain't no better reason
-To [D]rid yourself of vanities and just go with the seasons
-It'[Em]s what we aim to do
-Our [C]name is our virtue`,
-
-    `But [G]I won't hesi[D]ta[Dsus4]te   
-No more, no [Em]more
-It cannot [C]wait; I'm you[G]rs
-Well, open up your mind and see like [D]me
-Open up your plans and damn you're f[Em]ree
-Look into your heart and you'll find that[C] the sky is yours
-So [G]please don't, please don't, please don't
-There's no [D]need to c[Dsus4]omplicate
-'Cause our [Em]time is short
-This oh, this oh, this is our [C]fate
-I'm you[A7]rs`,
-
-    `Brr-ba-mmm, da-ba-mmm-d[G]ay
-T-du, du, t-du, du, t-du, dudu, d[D]u-u, du-du
-[Em]     Oh, [C]I'm yours
-Oh, I'm [G]yours
-Oh-oh-oh-oh, whoa-oh-[D]oh-oh
-Baby, do believe I'm yo[Em]urs
-You best believe, you best believe I'm y[C]ours
-`,
   ];
 
   const [tab, setTab] = useState([
@@ -79,6 +45,13 @@ You best believe, you best believe I'm y[C]ours
   const [chordIndex, setChordIndex] = useState(0);
 
   const [verseIndex, setVerseIndex] = useState(0);
+
+  const [open, setOpen] = useState(false);
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const [isPlaying, setIsPlaying] = useState(false);
 
   const formatTab = (index) => {
     let array = [];
@@ -127,25 +100,37 @@ You best believe, you best believe I'm y[C]ours
     setFormatedTab(array);
   };
 
+  const playStart = () => {
+    setIsPlaying(true);
+    console.log("play");
+  }
+
   useEffect(() => {
     //Implementing the setInterval method
     const interval = setInterval(() => {
-      setChordIndex((chordIndex + 1) % chordMap.length);
+      if (isPlaying) setChordIndex((chordIndex + 1) % chordMap.length);
     }, 2000);
 
     //Clearing the interval
-    return () => clearInterval(interval);
+    return () => {
+      clearInterval(interval);
+    };
   }, [chordIndex]);
 
   useEffect(() => {
     //Implementing the setInterval method
     const interval = setInterval(() => {
-	  setChordIndex(0);
-      setVerseIndex((verseIndex + 1) % tabBckup.length);
+      setChordIndex(0);
+      if (isPlaying) setVerseIndex((verseIndex + 1) % tabBckup.length);
     }, seconds);
 
     //Clearing the interval
-    return () => clearInterval(interval);
+    return () => {
+      if (verseIndex === tabBckup.length - 1) {
+        setIsPlaying(false);
+      }
+      clearInterval(1000);
+    };
   }, [verseIndex]);
 
   useEffect(() => {
@@ -153,22 +138,46 @@ You best believe, you best believe I'm y[C]ours
   }, [verseIndex]);
 
   return (
-    <Grid container className="container">
+    <Grid container>
       <Grid item xs={12}>
-        <MusicNoteIcon /> {"= " + bpm}
+        <div className="tab">
+          <MusicNoteIcon /> {"= " + bpm}
+        </div>
       </Grid>
       <Grid item xs={12}>
-        <Button>Color Chords</Button>
-        <p style={{ whiteSpace: "pre-wrap" }}>
+        <p className="tab" style={{ whiteSpace: "pre-wrap" }}>
           {formatedTab.map((row, index) => {
-			if (index === chordIndex) {
-			  return <span style={{color:"red"}}>{row}</span>;
-			} else {
-			  return row;
-			}
-		  })}
+            if (index === chordIndex) {
+              return <span style={{ color: "red" }}>{row}</span>;
+            } else {
+              return row;
+            }
+          })}
         </p>
+      </Grid>
+
+      <Grid item xs={12}>
+        <button className="button" onClick={playStart}> Start </button>
       </Grid>
     </Grid>
   );
 };
+
+function SimpleDialog(props) {
+  const { onClose, selectedValue, open } = props;
+
+  const handleClose = () => {
+    onClose();
+  };
+
+  const handleListItemClick = () => {
+    onClose();
+  };
+
+  return (
+    <Dialog onClose={handleClose} open={open}>
+      <DialogTitle>Set backup account</DialogTitle>
+      <List sx={{ pt: 0 }}></List>
+    </Dialog>
+  );
+}

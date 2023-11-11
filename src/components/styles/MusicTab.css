@@ -1,3 +1,28 @@
 .container {
 	padding: 10px;
 }
+
+.tab {
+font-family: "Roboto", sans-serif;
+font-size: 1rem;
+font-weight: 600;
+line-height: 30px;
+letter-spacing: 0em;
+text-align: left;
+}
+
+.button {
+  background-color: #7fbeec9d;
+  color: #f9f8f8;
+  font-family: "Roboto", sans-serif;
+  font-size: 1.2rem;
+  font-weight: 600;
+  line-height: 17px;
+  letter-spacing: 0em;
+  text-align: center;
+  padding: 15px;
+  width: 100%;
+  border: 0;
+  border-radius: 10px;
+  margin-top: 70px;
+}
