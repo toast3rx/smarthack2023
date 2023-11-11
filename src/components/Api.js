@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import AudioContext from "./../contexts/AudioContext";
+import AudioCtxt from "../contexts/AudioCtxt";
 import autoCorrelate from "./../libs/AutoCorrelate";
 import {
   noteFromPitch,
@@ -7,19 +7,27 @@ import {
   getDetunePercent,
 } from "./../libs/Helpers";
 
-const audioCtx = AudioContext.getAudioContext();
-const analyserNode = AudioContext.getAnalyser();
+const audioCtx = AudioCtxt.getAudioContext();
+const analyserNode = AudioCtxt.getAnalyser();
 const buflen = 2048;
 var buf = new Float32Array(buflen);
 
-const songDuration = 180; //(s)
-const tempo = 1; // (batai / s)
 let startTime;
-// const v_ref = [1000, 2000, 3000]; // hardcodat vectorul de referinta
 let beats_elapsed = 0; // cate batai au trecut
-const beats_freq = 4; // la cate batai esantionez
-const durata_bataie = 1000; // in milisecunde
+const beats_freq = 4; // la cate batai esantionez  == 1 / listenRatio
 let input_values = [];
+
+
+const songDuration = 242;  // 4:02
+const songBPM = 151;  // beats per minute
+const bpm = songBPM / 1;
+const bps = bpm / 60;
+const bpms = bps / 1000;
+const durata_bataie = 1 / bpms; // in milisecunde
+
+const listenRatio = 1 / 4;
+const startListen = 1;  // start listening after `startListen` beats
+
 const noteStrings = [
   "C",
   "C#",
@@ -68,15 +76,16 @@ async function loadRefData() {
     }
 }
 
-async function loadInputData() {
-    inputData = [];
-    for (let i = 0; i < inputFiles.length; i++) {
-        let r = await readAudio(inputFiles[i]);
-        inputData.push(r);
-        console.log("inputData[" + i + "] len:" + r.length);
-    }
-}
+// async function loadInputData() {
+//     inputData = [];
+//     for (let i = 0; i < inputFiles.length; i++) {
+//         let r = await readAudio(inputFiles[i]);
+//         inputData.push(r);
+//         console.log("inputData[" + i + "] len:" + r.length);
+//     }
+// }
 
+let refIndex = 0;
 export const Api = () => {
     const [source, setSource] = useState(null);
     const [started, setStart] = useState(false);
@@ -99,6 +108,9 @@ export const Api = () => {
         console.log("elapsed", thisTime - startTime);
         startTime = thisTime;
         beats_elapsed++;
+        refIndex = (beats_elapsed - 1) % beats_freq;
+        console.log("---->", refIndex);
+
         console.log("beats elapsed", beats_elapsed);
         }
         // daca nu sunt in perioada care imi trebuie, nu am nevoie sa citesc macar datele de la microfon
@@ -123,22 +135,14 @@ export const Api = () => {
 
     useEffect(() => {
         loadRefData();
-        loadInputData();
+        // loadInputData();
 
         if (source != null) {
-        source.connect(analyserNode);
-        // seteaza timpul epoch cand butonul e apasat
-        startTime = Date.now();
+            source.connect(analyserNode);
+            // seteaza timpul epoch cand butonul e apasat
+            startTime = Date.now();
         }
     }, [source]);
-
-    const songDuration = 242;  // 4:02
-    const songBPM = 151;  // beats per minute
-    const bpm = songBPM / 1;
-    const bps = bpm / 60;
-
-    const listenRatio = 1 / 4;
-    const startListen = 1;  // start listening after `startListen` beats
 
     // const [dataRef1, setDataRef1] = useState([0.0]);
     // const [inputData1, setInputData1] = useState([0.0]);
@@ -168,7 +172,7 @@ export const Api = () => {
         return 1 - Math.abs(averageA - averageB) / averageA;
     };
 
-    async function wavCompare(inputDataBin, refIndex) {
+    function wavCompare(inputDataBin, refIndex) {
         let result = dataBinsCompare(refData[refIndex], inputDataBin);
         console.log("comparison for index " + refIndex + ": " + result);
     }
