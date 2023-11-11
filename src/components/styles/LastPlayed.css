@@ -1,0 +1,14 @@
+.songs-container {
+	background: #F9F8F8;
+	border: solid;
+	border-width: 1px;
+	border-color: #F9F8F8;
+	border-radius: 10px;
+	margin-top: 20px;
+	padding: 8px;
+}
+
+.rounded {
+  border-top: 2px solid #bbb;
+  border-radius: 5px;
+}

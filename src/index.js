@@ -6,6 +6,7 @@ import reportWebVitals from './reportWebVitals';
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import { Api } from './components/Api';
 import { Song } from './components/Song';
+import { Summary } from './components/Summary';
 
 const router = createBrowserRouter([
   {
@@ -19,6 +20,10 @@ const router = createBrowserRouter([
   {
     path: "/song",
     element: <Song />,
+  },
+  {
+    path: "/summary",
+    element: <Summary />,
   }
 ]);
 
