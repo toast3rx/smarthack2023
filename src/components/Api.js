@@ -1,6 +1,53 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+
+const refFiles = ["/data/you_ref.wav", "/data/tried_ref.wav", "/data/fell_ref.wav", "/data/trying_ref.wav"]
+const inputFiles = ["/data/you1.wav", "/data/tried1.wav", "/data/fell1.wav", "/data/trying1.wav"]
+let refData = [];
+let inputData = [];
+
+async function readAudio(url) {
+    let audioData = await fetch(url).then(r => {
+        return r.arrayBuffer();
+    });
+    let audioCtx = new AudioContext({sampleRate:8000});
+    // audio is resampled to the AudioContext's sampling rate
+    try {
+        let decodedData = await audioCtx.decodeAudioData(audioData);
+        // console.log(decodedData.length, decodedData.duration,
+        //         decodedData.sampleRate, decodedData.numberOfChannels);
+        let float32Data = decodedData.getChannelData(0); // Float32Array for channel 0
+        return float32Data;
+    } catch (err) {
+        console.log(
+            `Unable to fetch the audio file: ${url} Error: ${err.message}`,
+            );
+    }
+}
+
+async function loadRefData() {
+    refData = [];
+    for (let i = 0; i < refFiles.length; i++) {
+        let r = await readAudio(refFiles[i]);
+        refData.push(r);
+        console.log("dataRef[" + i + "] len:" + r.length);
+    }
+}
+
+async function loadInputData() {
+    inputData = [];
+    for (let i = 0; i < inputFiles.length; i++) {
+        let r = await readAudio(inputFiles[i]);
+        inputData.push(r);
+        console.log("inputData[" + i + "] len:" + r.length);
+    }
+}
 
 export const Api = () => {
+    useEffect(() => {
+        loadRefData();
+        loadInputData();
+    }, []);
+
     const songDuration = 242;  // 4:02
     const songBPM = 151;  // beats per minute
     const bpm = songBPM / 1;
@@ -9,22 +56,18 @@ export const Api = () => {
     const listenRatio = 1 / 4;
     const startListen = 1;  // start listening after `startListen` beats
 
-    const [dataRef1, setDataRef1] = useState([0.0]);
-    const [inputData1, setInputData1] = useState([0.0]);
-    const [dataRef2, setDataRef2] = useState([0.0]);
-    const [inputData2, setInputData2] = useState([0.0]);
-    const [dataRef3, setDataRef3] = useState([0.0]);
-    const [inputData3, setInputData3] = useState([0.0]);
-    const [dataRef4, setDataRef4] = useState([0.0]);
-    const [inputData4, setInputData4] = useState([0.0]);
+    // const [dataRef1, setDataRef1] = useState([0.0]);
+    // const [inputData1, setInputData1] = useState([0.0]);
+    // const [dataRef2, setDataRef2] = useState([0.0]);
+    // const [inputData2, setInputData2] = useState([0.0]);
+    // const [dataRef3, setDataRef3] = useState([0.0]);
+    // const [inputData3, setInputData3] = useState([0.0]);
+    // const [dataRef4, setDataRef4] = useState([0.0]);
+    // const [inputData4, setInputData4] = useState([0.0]);
 
-    const refFiles = ["/data/you_ref.wav", "/data/tried_ref.wav", "/data/fell_ref.wav", "/data/trying_ref.wav"]
-    const inputFiles = ["/data/you1.wav", "/data/tried1.wav", "/data/fell1.wav", "/data/trying1.wav"]
     // const [dataRef, setDataRef] = useState([0.0]);
     // const [inputData, setInputData] = useState([0.0]);
 
-    let dataRef = [];
-    let inputData = [];
 
     const absArray = (array) => {
         if (!array || !array.length) {
@@ -41,20 +84,14 @@ export const Api = () => {
         return 1 - Math.abs(averageA - averageB) / averageA;
     };
 
-    async function wavCompare() {
-        for (let i = 0; i < refFiles.length; i++) {
-            let r = await readAudio(refFiles[i]);
-            dataRef.push(r);
-            // console.log("dataRef[" + i + "] len:" + r.length);
-        }
-        for (let i = 0; i < inputFiles.length; i++) {
-            let r = await readAudio(inputFiles[i]);
-            inputData.push(r);
-            // console.log("inputData[" + i + "] len:" + r.length);
-        }
+    async function wavCompare(inputDataBin, refIndex) {
+        let result = dataBinsCompare(refData[refIndex], inputDataBin);
+        console.log("comparison for index " + refIndex + ": " + result);
+    }
 
-        for (let i = 0; i < dataRef.length; i++) {
-            console.log("comparison for index " + i + ": " + dataBinsCompare(dataRef[i], inputData[i]))
+    async function _wavCompare() {
+        for (let i = 0; i < inputData.length; i++) {
+            wavCompare(inputData[i], i);
         }
 
         // ////
@@ -83,26 +120,6 @@ export const Api = () => {
         // console.log("trying: " + compareArrays(dataRefa[3], inputData4));
     }
 
-    async function readAudio(url) {
-        let audioData = await fetch(url).then(r => {
-            return r.arrayBuffer();
-        });
-        let audioCtx = new AudioContext({sampleRate:8000});
-        // audio is resampled to the AudioContext's sampling rate
-        try {
-            let decodedData = await audioCtx.decodeAudioData(audioData);
-            // console.log(decodedData.length, decodedData.duration,
-            //         decodedData.sampleRate, decodedData.numberOfChannels);
-            let float32Data = decodedData.getChannelData(0); // Float32Array for channel 0
-            return float32Data;
-        } catch (err) {
-            console.log(
-                `Unable to fetch the audio file: ${url} Error: ${err.message}`,
-              );
-        }
-
-    }
-
     const buttonClick = () => {
         console.log("Button clicked");
     }
@@ -110,7 +127,7 @@ export const Api = () => {
     return (
         <div>
             <button onClick={buttonClick}> Click me </button>
-            <button onClick={() => {wavCompare()}}> Test </button>
+            <button onClick={() => {_wavCompare()}}> Test </button>
         </div>
 
     );
