@@ -5,6 +5,7 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import { Api } from './components/Api';
+import { Song } from './components/Song';
 
 const router = createBrowserRouter([
   {
@@ -14,6 +15,10 @@ const router = createBrowserRouter([
   {
     path: "/api",
     element: <Api />,
+  },
+  {
+    path: "/song",
+    element: <Song />,
   }
 ]);
 

@@ -1,4 +1,6 @@
 import logo from './logo.svg';
+import ChordSheetJS from "chordsheetjs";
+
 
 function App() {
   return (
