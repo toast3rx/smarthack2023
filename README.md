@@ -1,6 +1,6 @@
 # SoundTrack
 
-This project was created as part of the [SmartHack 2023](https://smarthack.asmi.ro/) event. It's goal is to track music playing skills by comparing the user's note accuracy and rhythm to the actual music sheet.
+This project was created as part of the [SmartHack 2023](https://smarthack.asmi.ro/) event. It's goal is to track music playing skills through signal processing of the user's playing. This is achieved by comparing note accuracy and rhythm to the actual music sheet.
 
 ## Page Structure
 `Summary` - landing page displaying skill statistics based on the last week of playing and a list of recently played music
