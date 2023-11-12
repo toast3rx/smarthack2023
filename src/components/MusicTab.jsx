@@ -13,7 +13,14 @@ import {
   getDetunePercent,
 } from "./../libs/Helpers";
 
-export const MusicTab = ({ bpm1=151, seconds = 6358 }) => {
+const songDuration = 242;  // 4:02
+const songBPM = 151;  // beats per minute
+const bpm = songBPM / 1;
+const bps = bpm / 60;
+const bpms = bps / 1000;
+const durata_bataie = 1 / bpms; // in milisecunde
+
+export const MusicTab = ({ bpm1=151, seconds = durata_bataie}) => {
 
 const [rightAns, setRightAns] = useState(0);
 let ans = 0;
@@ -247,13 +254,6 @@ const beats_freq = 8; // la cate batai esantionez  == 1 / listenRatio
 let input_values = [];
 
 
-const songDuration = 242;  // 4:02
-const songBPM = 151;  // beats per minute
-const bpm = songBPM / 1;
-const bps = bpm / 60;
-const bpms = bps / 1000;
-const durata_bataie = 1 / bpms; // in milisecunde
-
 const listenRatio = 1 / 4;
 const startListen = 1;  // start listening after `startListen` beats
 
@@ -306,7 +306,7 @@ let zero = 0;
         var ac = autoCorrelate(buf, audioCtx.sampleRate);
     
         if (thisTime - startTime >= durata_bataie) {
-            if (beats_elapsed % beats_freq === 1) {
+            if (beats_elapsed % beats_freq === 0) {
                 console.log(refIndex);
                 console.log(input_values);
                 ans += wavCompare(input_values, refIndex);
@@ -379,13 +379,6 @@ let zero = 0;
         let result = dataBinsCompare(refData2[refIndex], inputDataBin);
         console.log("comparison for index " + refIndex + ": " + result);
         setWaveRes(result);
-        // if (result) {
-        //     console.log("Intra aici")
-        //     setRightAns(rightAns + 1);
-        //     // await incrementAns(rightAns);
-        //     console.log("rightAns: " + rightAns)
-        //     ans++;
-        // }
         return result;
     }
 
@@ -578,7 +571,7 @@ To [C]win some or learn some`,
           setAverageScore(100 * parseInt(localStorage.getItem("please")) / 8)
           setOpen(true);
         }
-      }, seconds);
+      }, durata_bataie * 32);
     // } else {
     //     console.log("Correct ans:", ans)
     //     setAverageScore(100 * ans / 8)
@@ -609,7 +602,7 @@ To [C]win some or learn some`,
         </div>
       </Grid>
       <Grid item xs={12}>
-        <Metronome bpm={397} isPlaying={isPlaying} />
+        <Metronome bpm={durata_bataie * 2} isPlaying={isPlaying} startIndex={3}/>
       </Grid>
       <Grid item xs={12}>
         <p className="tab" style={{ whiteSpace: "pre-wrap" }}>

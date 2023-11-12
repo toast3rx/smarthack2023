@@ -2,17 +2,17 @@ import { Grid } from "@mui/material";
 import { useEffect, useState } from "react";
 import "./styles/Metronome.css";
 
-export const Metronome = ({ bpm, isPlaying }) => {
-  const [index, setIndex] = useState(0);
+export const Metronome = ({ bpm, isPlaying, startIndex }) => {
+  const [index, setIndex] = useState(startIndex);
 
   useEffect(() => {
     let interval = null;
     if (isPlaying) {
       interval = setInterval(() => {
         setIndex((index + 1) % 4);
+        // startIndex++;
+        // localStorage.setItem("metro", startIndex);
       }, bpm);
-    } else {
-      setIndex(0);
     }
 
     return () => {
