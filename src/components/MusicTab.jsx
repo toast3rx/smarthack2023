@@ -19,9 +19,12 @@ const bpm = songBPM / 1;
 const bps = bpm / 60;
 const bpms = bps / 1000;
 const durata_bataie = 1 / bpms; // in milisecunde
-const durataStrofa = durata_bataie * 33;
-const durataMetronom =  durata_bataie * 1.99;
-const epsilon = 10;
+const durataStrofa = durata_bataie * 32;
+// const durataMetronom =  durata_bataie * 2;
+const durataMetronom =  794.70199;
+// const durataInput = durata_bataie * 1.01;
+const durataInput = 397.35099;
+const epsilon = 20;
 
 export const MusicTab = ({ bpm1=151, seconds = durata_bataie}) => {
 
@@ -308,8 +311,9 @@ let zero = 0;
         analyserNode.getFloatTimeDomainData(buf);
         var ac = autoCorrelate(buf, audioCtx.sampleRate);
     
-        if (thisTime - startTime >= durata_bataie - 2 * epsilon) {
-            if (beats_elapsed % beats_freq === 1) {
+        // if (thisTime - startTime >= durata_bataie - 2 * epsilon) {
+        if (thisTime - startTime >= durataInput) {
+            if (beats_elapsed % beats_freq === 2) {
                 console.log(refIndex);
                 console.log(input_values);
                 ans += wavCompare(input_values, refIndex);
