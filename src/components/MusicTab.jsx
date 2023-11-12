@@ -282,15 +282,15 @@ and [D]nothin's gonna stop me but divine intervention
 I [Em]reckon it's again my turn
 To [C]win some or learn some`,
 
-    `But [G]I won't hesi[D]tate
-    No more, no [Em]more
-    It cannot [C]wait; I'm you-`,
+    // `But [G]I won't hesi[D]tate
+    // No more, no [Em]more
+    // It cannot [C]wait; I'm you-`,
 
-    `[G]-rs ... [D] ... [Em] ... [C]`,
+    // `[G]-rs ... [D] ... [Em] ... [C]`,
 
-    `[G]  Well, open up your mind and see like [D]me
-    Open up your plans and damn you're [Em]free
-    Look into your heart and you'll find [C]love, love, love, love`,
+    // `[G]  Well, open up your mind and see like [D]me
+    // Open up your plans and damn you're [Em]free
+    // Look into your heart and you'll find [C]love, love, love, love`,
 
     //     `[G]Listen to the music of the moment, people dance [D]and sing, we're just one big fami[Em]ly
     // And it's our God-forsaken right to be [C]loved, loved, loved, loved, [A7]loved`,

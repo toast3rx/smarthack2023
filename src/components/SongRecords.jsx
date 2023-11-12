@@ -15,8 +15,8 @@ const songs = [
     score: "90%",
   },
   {
-    title: "Someone You Loved",
-    author: "Lewis Capaldi",
+    title: "La vie en gros",
+    author: "Edit Pilaf",
     score: "34%",
   },
   {
@@ -30,17 +30,17 @@ const songs = [
     score: "33",
   },
   {
-    title: "LIke a Rolling Stone",
-    author: "Bob Dylan",
+    title: "Vreau sa dorm",
+    author: "StudentLaPoli",
     score: "84%",
   },
   {
-    title: "Believer",
-    author: "Imagine Dragons",
+    title: "Pe aripi de vant",
+    author: "Vremea de Afara",
     score: "45%",
   },
   {
-    title: "Shape of You",
+    title: "Perfect",
     author: "Ed Sheeran",
     score: "23%",
   },
