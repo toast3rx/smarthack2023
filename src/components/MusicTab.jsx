@@ -4,26 +4,32 @@ import MusicNoteIcon from "@mui/icons-material/MusicNote";
 import { useEffect, useState } from "react";
 import { Button } from "@mui/base";
 import { clear } from "localforage";
+import { Metronome } from "./Metronome";
 
-export const MusicTab = ({ bpm, seconds }) => {
+export const MusicTab = ({ bpm, seconds = 6350 }) => {
   const tabBckup = [
-    `But [G]I won't hesi[D]tate
-No more, no [Em]more
-It cannot [C]wait; I'm you[G]rs  [D]    [Em]     [C]`,
+    `Before the [C]cool done run out, I'll be givin' it my bestest
+and [D]nothin's gonna stop me but divine intervention
+I [Em]reckon it's again my turn
+To [C]win some or learn some`,
 
-    `[G]  Well, open up your mind and see like [D]me
-Open up your plans and damn you're [Em]free
-Look into your heart and you'll find [C]love, love, love, love`,
+//     `But [G]I won't hesi[D]tate
+// No more, no [Em]more
+// It cannot [C]wait; I'm you[G]rs  [D]    [Em]     [C]`,
 
-    `[G]Listen to the music of the moment, people dance [D]and sing, we're just one big fami[Em]ly
-And it's our God-forsaken right to be [C]loved, loved, loved, loved, [A7]loved`,
+//     `[G]  Well, open up your mind and see like [D]me
+// Open up your plans and damn you're [Em]free
+// Look into your heart and you'll find [C]love, love, love, love`,
 
-    `So [G]I won't hesi[D]tat[Dsus4]e    
-No more, no [Em]more
-It cannot [C]wait, I'm sure
-There's no [G]need to compli[D]cate
-Our time is [Em]short
-This is our [C]fate, I'm yours`,
+//     `[G]Listen to the music of the moment, people dance [D]and sing, we're just one big fami[Em]ly
+// And it's our God-forsaken right to be [C]loved, loved, loved, loved, [A7]loved`,
+
+//     `So [G]I won't hesi[D]tat[Dsus4]e    
+// No more, no [Em]more
+// It cannot [C]wait, I'm sure
+// There's no [G]need to compli[D]cate
+// Our time is [Em]short
+// This is our [C]fate, I'm yours`,
   ];
 
   const [tab, setTab] = useState([
@@ -45,6 +51,10 @@ This is our [C]fate, I'm yours`,
   const handleClose = () => {
     setOpen(false);
   };
+
+  const [missedNotes, setMissedNotes] = useState(0);
+  const [correctNotes, setCorrectNotes] = useState(0);
+  const [averageScore, setAverageScore] = useState(0);
 
   //////////////////////////////////
   //// Format tab into an array/////
@@ -102,6 +112,8 @@ This is our [C]fate, I'm yours`,
 
   const [buttonText, setButtonText] = useState("Start");
 
+  const [score, setScore] = useState(100);
+
   /////////////////////////////////////////////
   //////  Start timer after button click //////
   /////////////////////////////////////////////
@@ -114,7 +126,6 @@ This is our [C]fate, I'm yours`,
           setTimer(timer - 1);
         }
         if (timer === 1) {
-          clearInterval(interval);
           setIsPlaying(true);
           setButtonClicked(false);
           setButtonText("Listening...");
@@ -138,9 +149,9 @@ This is our [C]fate, I'm yours`,
           setVerseIndex(verseIndex + 1);
         } else {
           setIsPlaying(false);
-          clearInterval(interval);
+          setOpen(true);
         }
-      }, 1000);
+      }, seconds);
     }
     return () => {
       clearInterval(interval);
@@ -154,12 +165,32 @@ This is our [C]fate, I'm yours`,
     formatTab(verseIndex);
   }, [verseIndex]);
 
+  useEffect(() => {
+    let interval = null;
+    if (isPlaying) {
+      interval = setInterval(() => {
+        setAverageScore(averageScore + 1);
+      }, 1586);
+    }
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, [isPlaying, averageScore]);
+
+  useEffect(() => {
+    setAverageScore(averageScore + 1);
+  }, [isPlaying]);
+
   return (
     <Grid container>
       <Grid item xs={12}>
-        <div className="tab">
+        <div className="bpm">
           <MusicNoteIcon /> {"= " + bpm}
         </div>
+      </Grid>
+      <Grid item xs={12}>
+        <Metronome bpm={397} isPlaying={isPlaying} />
       </Grid>
       <Grid item xs={12}>
         <p className="tab" style={{ whiteSpace: "pre-wrap" }}>
@@ -167,6 +198,9 @@ This is our [C]fate, I'm yours`,
         </p>
       </Grid>
 
+      <Grid item xs={12}>
+        <div className="scoreDiv"> Score: {score}</div>
+      </Grid>
       <Grid item xs={12}>
         <button
           className="button"
@@ -178,6 +212,11 @@ This is our [C]fate, I'm yours`,
           {buttonText}
         </button>
       </Grid>
+      <SimpleDialog
+        open={open}
+        onClose={handleClose}
+        selectedValue={averageScore}
+      />
     </Grid>
   );
 };
@@ -195,7 +234,13 @@ function SimpleDialog(props) {
 
   return (
     <Dialog onClose={handleClose} open={open}>
-      <DialogTitle>Set backup account</DialogTitle>
+      <DialogTitle>Your score: {selectedValue}</DialogTitle>
+      <Grid container style={{ padding: "20px" }} justifyContent={"center"}>
+        <button className="tryagainBtn"> Try again </button>
+        <div style={{ height: "10px", width: "10px" }}></div>
+        <button className="tryagainBtn"> Go Home </button>
+      </Grid>
+
       <List sx={{ pt: 0 }}></List>
     </Dialog>
   );
