@@ -13,7 +13,17 @@ import {
   getDetunePercent,
 } from "./../libs/Helpers";
 
-export const MusicTab = ({ bpm1=151, seconds = 6358 }) => {
+const songDuration = 242;  // 4:02
+const songBPM = 151;  // beats per minute
+const bpm = songBPM / 1;
+const bps = bpm / 60;
+const bpms = bps / 1000;
+const durata_bataie = 1 / bpms; // in milisecunde
+const durataStrofa = durata_bataie * 33;
+const durataMetronom =  durata_bataie * 1.99;
+const epsilon = 10;
+
+export const MusicTab = ({ bpm1=151, seconds = durata_bataie}) => {
 
 const [rightAns, setRightAns] = useState(0);
 let ans = 0;
@@ -26,7 +36,7 @@ let ans = 0;
 const audioCtx = AudioCtxt.getAudioContext();
 const analyserNode = AudioCtxt.getAnalyser();
 const buflen = 2048;
-const treshold = 35; // Hz
+const treshold = 50; // Hz
 var buf = new Float32Array(buflen);
 const G = [
     154.95703700500525,
@@ -247,13 +257,6 @@ const beats_freq = 8; // la cate batai esantionez  == 1 / listenRatio
 let input_values = [];
 
 
-const songDuration = 242;  // 4:02
-const songBPM = 151;  // beats per minute
-const bpm = songBPM / 1;
-const bps = bpm / 60;
-const bpms = bps / 1000;
-const durata_bataie = 1 / bpms; // in milisecunde
-
 const listenRatio = 1 / 4;
 const startListen = 1;  // start listening after `startListen` beats
 
@@ -305,7 +308,7 @@ let zero = 0;
         analyserNode.getFloatTimeDomainData(buf);
         var ac = autoCorrelate(buf, audioCtx.sampleRate);
     
-        if (thisTime - startTime >= durata_bataie) {
+        if (thisTime - startTime >= durata_bataie - 2 * epsilon) {
             if (beats_elapsed % beats_freq === 1) {
                 console.log(refIndex);
                 console.log(input_values);
@@ -322,8 +325,8 @@ let zero = 0;
             // console.log("beats elapsed", beats_elapsed);
         }
         // daca nu sunt in perioada care imi trebuie, nu am nevoie sa citesc macar datele de la microfon
-        if ((beats_elapsed % beats_freq !== 1) && (beats_elapsed % beats_freq !== 2))
-        // if (beats_elapsed % beats_freq !== 1)
+        // if ((beats_elapsed % beats_freq !== 1) && (beats_elapsed % beats_freq !== 2))
+        if (beats_elapsed % beats_freq !== 1)
             return;
 
         // ma aflu in perioada corecta
@@ -370,30 +373,19 @@ let zero = 0;
         return 1;
     };
 
-    async function incrementAns(ans) {
-        setRightAns(rightAns + 1);
-    }
-
     function wavCompare(inputDataBin, refIndex) {
         // console.log("--->", refData2[refIndex]);
         let result = dataBinsCompare(refData2[refIndex], inputDataBin);
         console.log("comparison for index " + refIndex + ": " + result);
         setWaveRes(result);
-        // if (result) {
-        //     console.log("Intra aici")
-        //     setRightAns(rightAns + 1);
-        //     // await incrementAns(rightAns);
-        //     console.log("rightAns: " + rightAns)
-        //     ans++;
-        // }
         return result;
     }
 
-    setInterval(updatePitch, 1);
+    setInterval(updatePitch, 0.1);
     useEffect(() => {
         const timer = setTimeout(() => {
             updatePitch();
-        }, 1);
+        }, 0.1);
         // let interval = null;
         // setInterval(updatePitch, 1);
         return () => {
@@ -439,7 +431,9 @@ To [C]win some or learn some`,
 
         `But [G]I won't hesi[D]tate
     No more, no [Em]more
-    It cannot [C]wait; I'm you[G]rs  [D]    [Em]     [C]`,
+    It cannot [C]wait; I'm you-`,
+
+        `[G]-rs ... [D] ... [Em] ... [C]`,
 
         `[G]  Well, open up your mind and see like [D]me
     Open up your plans and damn you're [Em]free
@@ -578,7 +572,7 @@ To [C]win some or learn some`,
           setAverageScore(100 * parseInt(localStorage.getItem("please")) / 8)
           setOpen(true);
         }
-      }, seconds);
+      }, durataStrofa);
     // } else {
     //     console.log("Correct ans:", ans)
     //     setAverageScore(100 * ans / 8)
@@ -609,7 +603,7 @@ To [C]win some or learn some`,
         </div>
       </Grid>
       <Grid item xs={12}>
-        <Metronome bpm={397} isPlaying={isPlaying} />
+        <Metronome bpm={durataMetronom} isPlaying={isPlaying} startIndex={3}/>
       </Grid>
       <Grid item xs={12}>
         <p className="tab" style={{ whiteSpace: "pre-wrap" }}>
