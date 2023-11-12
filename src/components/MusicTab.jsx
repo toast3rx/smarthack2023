@@ -20,9 +20,12 @@ const bpm = songBPM / 1;
 const bps = bpm / 60;
 const bpms = bps / 1000;
 const durata_bataie = 1 / bpms; // in milisecunde
-const durataStrofa = durata_bataie * 33;
-const durataMetronom = durata_bataie * 1.99;
-const epsilon = 10;
+const durataStrofa = durata_bataie * 32;
+// const durataMetronom =  durata_bataie * 2;
+const durataMetronom =  794.70199;
+// const durataInput = durata_bataie * 1.01;
+const durataInput = 397.35099;
+const epsilon = 20;
 
 export const MusicTab = ({ bpm1 = 151, seconds = durata_bataie }) => {
   const [rightAns, setRightAns] = useState(0);
@@ -152,32 +155,34 @@ export const MusicTab = ({ bpm1 = 151, seconds = durata_bataie }) => {
   const [detune, setDetune] = useState("0");
   const [notification, setNotification] = useState(false);
 
-  const updatePitch = () => {
-    const thisTime = Date.now();
-    analyserNode.getFloatTimeDomainData(buf);
-    var ac = autoCorrelate(buf, audioCtx.sampleRate);
-
-    if (thisTime - startTime >= durata_bataie - 2 * epsilon) {
-      if (beats_elapsed % beats_freq === 1) {
-        console.log(refIndex);
-        console.log(input_values);
-        let res = wavCompare(input_values, refIndex);
-        ans += res;
-        console.log("ans: ", ans);
-        localStorage.setItem("please", ans);
-        localStorage.setItem("please2", res);
-        input_values = [];
-        refIndex++;
-        refIndex %= beats_freq / 2;
-      }
-      // console.log("elapsed", thisTime - startTime);
-      startTime = thisTime;
-      beats_elapsed++;
-      // console.log("beats elapsed", beats_elapsed);
-    }
-    // daca nu sunt in perioada care imi trebuie, nu am nevoie sa citesc macar datele de la microfon
-    // if ((beats_elapsed % beats_freq !== 1) && (beats_elapsed % beats_freq !== 2))
-    if (beats_elapsed % beats_freq !== 1) return;
+    const updatePitch = () => {
+        const thisTime = Date.now();
+        analyserNode.getFloatTimeDomainData(buf);
+        var ac = autoCorrelate(buf, audioCtx.sampleRate);
+    
+        // if (thisTime - startTime >= durata_bataie - 2 * epsilon) {
+        if (thisTime - startTime >= durataInput) {
+            if (beats_elapsed % beats_freq === 2) {
+                console.log(refIndex);
+                console.log(input_values);
+                let res = wavCompare(input_values, refIndex);
+                ans += res;
+                console.log("ans: ", ans);
+                localStorage.setItem("please", ans);
+                localStorage.setItem("please2", res);
+                input_values = [];
+                refIndex++;
+                refIndex %= (beats_freq / 2);
+            }
+            // console.log("elapsed", thisTime - startTime);
+            startTime = thisTime;
+            beats_elapsed++;
+            // console.log("beats elapsed", beats_elapsed);
+        }
+        // daca nu sunt in perioada care imi trebuie, nu am nevoie sa citesc macar datele de la microfon
+        // if ((beats_elapsed % beats_freq !== 1) && (beats_elapsed % beats_freq !== 2))
+        if (beats_elapsed % beats_freq !== 1)
+            return;
 
     // ma aflu in perioada corecta
     if (ac > -1) {
