@@ -68,7 +68,7 @@ export const records = [
       ]
     },
     {
-      title: "Someone you loved",
+      title: "La vie en gros",
       info: [
         {
           date: "11 September",
