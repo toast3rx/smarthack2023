@@ -1,13 +1,411 @@
+import { useEffect, useState } from "react";
+import AudioCtxt from "../contexts/AudioCtxt";
+import autoCorrelate from "./../libs/AutoCorrelate";
+import {
+  noteFromPitch,
+  centsOffFromPitch,
+  getDetunePercent,
+} from "./../libs/Helpers";
+
+const audioCtx = AudioCtxt.getAudioContext();
+const analyserNode = AudioCtxt.getAnalyser();
+const buflen = 2048;
+const treshold = 35; // Hz
+var buf = new Float32Array(buflen);
+const G = [
+    154.95703700500525,
+    154.95703700500525,
+    155.2020176210264,
+    155.2020176210264,
+    155.2020176210264,
+    154.33004197731472,
+    154.33004197731472,
+    154.33004197731472,
+    155.94965770600308,
+    155.94965770600308,
+    155.94965770600308,
+    156.01433723960068,
+    156.01433723960068,
+    156.01433723960068,
+    155.56131606188447,
+    155.56131606188447,
+    156.01298787021528,
+    156.01298787021528,
+    156.01298787021528,
+    156.79459735151514,
+    156.79459735151514,
+    156.79459735151514,
+    156.73900866620997,
+    156.73900866620997,
+    156.73900866620997,
+    155.59451758931732,
+    155.59451758931732,
+    155.59451758931732,
+    155.2602833783648,
+    155.2602833783648,
+    155.2602833783648,
+    155.7109365642574,
+    155.7109365642574,
+    155.7109365642574,
+    154.29283244201224,
+    154.29283244201224,
+    155.57099833380647,
+    155.57099833380647,
+    154.93927739000847,
+    154.93927739000847,
+    154.93927739000847,
+    156.20549234328138,
+    156.20549234328138,
+    156.20549234328138,
+    154.8582052498462,
+    154.8582052498462,
+    154.8582052498462,
+    153.019650913888,
+    153.019650913888,
+    153.019650913888,
+    150.47646879905713,
+    150.47646879905713,
+    150.47646879905713
+]
+const D = [
+    92.88718785590801,
+    92.88718785590801,
+    92.88718785590801,
+    92.88687096473507,
+    92.88687096473507,
+    92.88687096473507,
+    92.85926708096778,
+    92.85926708096778,
+    92.67489865823453,
+    92.67489865823453,
+    92.67489865823453,
+    92.68150433606306,
+    92.68150433606306,
+    92.68150433606306,
+    92.63060439728365,
+    92.63060439728365,
+    92.82674379583169,
+    92.82674379583169,
+    92.82674379583169,
+    92.96142732919738,
+    92.96142732919738,
+    92.96142732919738,
+    92.87946269194394,
+    92.87946269194394,
+    92.69962748644753,
+    92.69962748644753,
+    92.69962748644753,
+    92.58568119278112,
+    92.58568119278112,
+    92.58568119278112,
+    92.50863996654753,
+    92.50863996654753,
+    92.50863996654753,
+    92.72137030510488,
+    92.72137030510488,
+    92.72137030510488,
+    92.78469858539465,
+    92.78469858539465,
+    92.70979359505657,
+    92.70979359505657,
+    92.70979359505657,
+    92.5677739724924,
+    92.5677739724924,
+    92.5677739724924,
+    92.49125500127735,
+    92.49125500127735,
+    92.49125500127735,
+    92.49955244467111,
+    92.49955244467111,
+    92.49955244467111,
+    92.57572551440792,
+    92.57572551440792
+]
+const Em = [
+    82.28022367135884,
+    82.28022367135884,
+    82.28022367135884,
+    81.61813623833372,
+    81.61813623833372,
+    81.61813623833372,
+    82.1336217393093,
+    82.1336217393093,
+    82.1336217393093,
+    82.0463831764343,
+    82.0463831764343,
+    82.0463831764343,
+    81.88633663212643,
+    81.88633663212643,
+    82.00135596110034,
+    82.00135596110034,
+    82.00135596110034,
+    82.19103455543913,
+    82.19103455543913,
+    82.19103455543913,
+    81.6421357620395,
+    81.6421357620395,
+    81.6421357620395,
+    81.75980852866427,
+    81.75980852866427,
+    81.75980852866427,
+    153.4635790106287,
+    153.4635790106287,
+    153.4635790106287,
+    82.10687391187675,
+    82.10687391187675,
+    82.34840104896578,
+    82.34840104896578,
+    82.34840104896578,
+    82.05198586143695,
+    82.05198586143695,
+    82.05198586143695,
+    82.31903602787021,
+    82.31903602787021,
+    82.31903602787021,
+    82.16266473916913,
+    82.16266473916913,
+    82.16266473916913,
+    81.96036723787248,
+    81.96036723787248,
+    81.96036723787248,
+    82.36874717699109,
+    82.36874717699109
+]
+const C = [
+    82.44141312277861,
+    82.15748785498769,
+    82.15748785498769,
+    82.15748785498769,
+    82.32122915255839,
+    82.32122915255839,
+    82.32122915255839,
+    82.65726552723955,
+    82.65726552723955,
+    82.65726552723955,
+    82.7015800824605,
+    82.7015800824605,
+    82.7015800824605,
+    82.6978547987299,
+    82.6978547987299,
+    82.6978547987299,
+    82.48822124301398,
+    82.48822124301398,
+    82.37868131362656,
+    82.37868131362656,
+    82.37868131362656,
+    82.63971700119016,
+    82.63971700119016,
+    82.63971700119016,
+    82.26248412683928,
+    82.26248412683928,
+    82.26248412683928,
+    82.21805316545388,
+    82.21805316545388,
+    82.21805316545388,
+    83.11731224545228,
+    83.11731224545228,
+    83.11731224545228,
+    82.47472692372914,
+    82.47472692372914,
+    82.13796128508923,
+    82.13796128508923,
+    82.13796128508923,
+    82.7905119111075,
+    82.7905119111075,
+    82.7905119111075,
+    82.19330299934909,
+    82.19330299934909,
+    82.19330299934909,
+    82.34482268421687,
+    82.34482268421687,
+    82.45009020616163,
+    82.45009020616163,
+    82.32018255410539,
+    82.32018255410539,
+    82.32018255410539
+]
+const refData2 = [G, D, Em, C];
+let startTime;
+let beats_elapsed = 0; // cate batai au trecut
+const beats_freq = 8; // la cate batai esantionez  == 1 / listenRatio
+let input_values = [];
+
+
+const songDuration = 242;  // 4:02
+const songBPM = 151;  // beats per minute
+const bpm = songBPM / 1;
+const bps = bpm / 60;
+const bpms = bps / 1000;
+const durata_bataie = 1 / bpms; // in milisecunde
+
+const listenRatio = 1 / 4;
+const startListen = 1;  // start listening after `startListen` beats
+
+const noteStrings = [
+  "C",
+  "C#",
+  "D",
+  "D#",
+  "E",
+  "F",
+  "F#",
+  "G",
+  "G#",
+  "A",
+  "A#",
+  "B",
+];
+
+async function readAudio(url) {
+    let audioData = await fetch(url).then(r => {
+        return r.arrayBuffer();
+    });
+    let audioCtx = new AudioContext({sampleRate:8000});
+    // audio is resampled to the AudioContext's sampling rate
+    try {
+        let decodedData = await audioCtx.decodeAudioData(audioData);
+        let float32Data = decodedData.getChannelData(0); // Float32Array for channel 0
+        return float32Data;
+    } catch (err) {
+        console.log(
+            `Unable to fetch the audio file: ${url} Error: ${err.message}`,
+            );
+    }
+}
+
+let refIndex = 0;
+let zero = 0;
 export const Api = () => {
+    const [source, setSource] = useState(null);
+    const [started, setStart] = useState(false);
+    const [pitchNote, setPitchNote] = useState("C");
+    const [pitchScale, setPitchScale] = useState("4");
+    const [pitch, setPitch] = useState("0 Hz");
+    const [detune, setDetune] = useState("0");
+    const [notification, setNotification] = useState(false);
 
-	const buttonClick = () => {
-		console.log("Button clicked");
-	}
+    const updatePitch = (time) => {
+        const thisTime = Date.now();
+        analyserNode.getFloatTimeDomainData(buf);
+        var ac = autoCorrelate(buf, audioCtx.sampleRate);
+    
+        if (thisTime - startTime >= durata_bataie) {
+            if (beats_elapsed % beats_freq === 1) {
+                console.log(refIndex);
+                console.log(input_values);
+                wavCompare(input_values, refIndex);
+                input_values = [];
+                refIndex++;
+                refIndex %= (beats_freq / 2);
+            }
+            // console.log("elapsed", thisTime - startTime);
+            startTime = thisTime;
+            beats_elapsed++;
+            // console.log("beats elapsed", beats_elapsed);
+        }
+        // daca nu sunt in perioada care imi trebuie, nu am nevoie sa citesc macar datele de la microfon
+        // if ((beats_elapsed % beats_freq !== 1) && (beats_elapsed % beats_freq !== 2))
+        if (beats_elapsed % beats_freq !== 1)
+            return;
 
-	return (
-		<div>
-			<button onClick={buttonClick}> Click me </button>
-		</div>
-		
-	);
+        // ma aflu in perioada corecta
+        if (ac > -1) {
+            let note = noteFromPitch(ac);
+            let sym = noteStrings[note % 12];
+            let scl = Math.floor(note / 12) - 1;
+            let dtune = centsOffFromPitch(ac, note);
+            setPitch(parseFloat(ac).toFixed(2) + " Hz");
+            setPitchNote(sym);
+            setPitchScale(scl);
+            setDetune(dtune);
+            setNotification(false);
+            // pun frecventele in vectorul care e dat ca parametru in functia de comparare cu ref-ul
+            input_values.push(ac);
+        }
+    };
+
+    useEffect(() => {
+        if (source != null) {
+            source.connect(analyserNode);
+            // seteaza timpul epoch cand butonul e apasat
+            startTime = Date.now();
+        }
+    }, [source]);
+
+    const absArray = (array) => {
+        if (!array || !array.length) {
+            return [0.0];
+        }
+        return array.map(Math.abs);
+    }
+
+    const dataBinsCompare = (a, b) => {
+        let absA = absArray(a);
+        let absB = absArray(b);
+        let averageA = absA.reduce((x, y) => x + y) / absA.length;
+        console.log("avgA = ", averageA);
+        let averageB = absB.reduce((x, y) => x + y) / absB.length;
+        console.log("avgB = ", averageB);
+
+        if (Math.abs(averageA - averageB) > treshold)
+            return 0;
+        return 1;
+    };
+
+    function wavCompare(inputDataBin, refIndex) {
+        // console.log("--->", refData2[refIndex]);
+        let result = dataBinsCompare(refData2[refIndex], inputDataBin);
+        console.log("comparison for index " + refIndex + ": " + result);
+    }
+
+    setInterval(updatePitch, 1);
+
+    const start = async () => {
+        const input = await getMicInput();
+
+        if (audioCtx.state === "suspended") {
+        await audioCtx.resume();
+        }
+        setStart(true);
+        setNotification(true);
+        setTimeout(() => setNotification(false), 5000);
+        setSource(audioCtx.createMediaStreamSource(input));
+    };
+
+    const stop = () => {
+        source.disconnect(analyserNode);
+        console.log("stopped");
+        setStart(false);
+    };
+
+    const getMicInput = () => {
+        return navigator.mediaDevices.getUserMedia({
+        audio: {
+            echoCancellation: true,
+            autoGainControl: false,
+            noiseSuppression: false,
+            latency: 0,
+        },
+        });
+    };
+
+    return (
+        <div className="flex flex-col items-center">
+            {!started ? (
+            <button
+                className="start"
+                onClick={start}
+            >
+                Start
+            </button>
+            ) : (
+            <button
+                className="stop"
+                onClick={stop}
+            >
+                Stop
+            </button>
+            )}
+        </div>
+    );
 }
