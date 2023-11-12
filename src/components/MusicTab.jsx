@@ -14,6 +14,11 @@ import {
 } from "./../libs/Helpers";
 
 export const MusicTab = ({ bpm1=151, seconds = 6358 }) => {
+
+const [rightAns, setRightAns] = useState(0);
+let ans = 0;
+
+
   //////////////////////////////////////////////////////////
   /////////////////// Sound utils /////////////////////////
   //////////////////////////////////////////////////////////
@@ -295,7 +300,7 @@ let zero = 0;
     const [detune, setDetune] = useState("0");
     const [notification, setNotification] = useState(false);
 
-    const updatePitch = (time) => {
+    const updatePitch = () => {
         const thisTime = Date.now();
         analyserNode.getFloatTimeDomainData(buf);
         var ac = autoCorrelate(buf, audioCtx.sampleRate);
@@ -304,7 +309,9 @@ let zero = 0;
             if (beats_elapsed % beats_freq === 1) {
                 console.log(refIndex);
                 console.log(input_values);
-                wavCompare(input_values, refIndex);
+                ans += wavCompare(input_values, refIndex);
+                console.log("ans: ", ans);
+                localStorage.setItem("please", ans);
                 input_values = [];
                 refIndex++;
                 refIndex %= (beats_freq / 2);
@@ -315,8 +322,8 @@ let zero = 0;
             // console.log("beats elapsed", beats_elapsed);
         }
         // daca nu sunt in perioada care imi trebuie, nu am nevoie sa citesc macar datele de la microfon
-        // if ((beats_elapsed % beats_freq !== 1) && (beats_elapsed % beats_freq !== 2))
-        if (beats_elapsed % beats_freq !== 1)
+        if ((beats_elapsed % beats_freq !== 1) && (beats_elapsed % beats_freq !== 2))
+        // if (beats_elapsed % beats_freq !== 1)
             return;
 
         // ma aflu in perioada corecta
@@ -363,14 +370,36 @@ let zero = 0;
         return 1;
     };
 
+    async function incrementAns(ans) {
+        setRightAns(rightAns + 1);
+    }
+
     function wavCompare(inputDataBin, refIndex) {
         // console.log("--->", refData2[refIndex]);
         let result = dataBinsCompare(refData2[refIndex], inputDataBin);
         console.log("comparison for index " + refIndex + ": " + result);
         setWaveRes(result);
+        // if (result) {
+        //     console.log("Intra aici")
+        //     setRightAns(rightAns + 1);
+        //     // await incrementAns(rightAns);
+        //     console.log("rightAns: " + rightAns)
+        //     ans++;
+        // }
+        return result;
     }
 
     setInterval(updatePitch, 1);
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            updatePitch();
+        }, 1);
+        // let interval = null;
+        // setInterval(updatePitch, 1);
+        return () => {
+        clearTimeout(timer);
+        };
+    }, [rightAns]);
 
     const start = async () => {
         const input = await getMicInput();
@@ -416,15 +445,15 @@ To [C]win some or learn some`,
     Open up your plans and damn you're [Em]free
     Look into your heart and you'll find [C]love, love, love, love`,
 
-        `[G]Listen to the music of the moment, people dance [D]and sing, we're just one big fami[Em]ly
-    And it's our God-forsaken right to be [C]loved, loved, loved, loved, [A7]loved`,
+    //     `[G]Listen to the music of the moment, people dance [D]and sing, we're just one big fami[Em]ly
+    // And it's our God-forsaken right to be [C]loved, loved, loved, loved, [A7]loved`,
 
-        `So [G]I won't hesi[D]tat[Dsus4]e
-    No more, no [Em]more
-    It cannot [C]wait, I'm sure
-    There's no [G]need to compli[D]cate
-    Our time is [Em]short
-    This is our [C]fate, I'm yours`,
+    //     `So [G]I won't hesi[D]tat[Dsus4]e
+    // No more, no [Em]more
+    // It cannot [C]wait, I'm sure
+    // There's no [G]need to compli[D]cate
+    // Our time is [Em]short
+    // This is our [C]fate, I'm yours`,
   ];
 
   const [tab, setTab] = useState([
@@ -510,7 +539,6 @@ To [C]win some or learn some`,
   const [score, setScore] = useState(100);
 
   const [wavRes, setWaveRes] = useState(0);
-
   /////////////////////////////////////////////
   //////  Start timer after button click //////
   /////////////////////////////////////////////
@@ -546,9 +574,15 @@ To [C]win some or learn some`,
           setVerseIndex(verseIndex + 1);
         } else {
           setIsPlaying(false);
+          console.log("Correct ans:", localStorage.getItem("please"));
+          setAverageScore(100 * parseInt(localStorage.getItem("please")) / 8)
           setOpen(true);
         }
       }, seconds);
+    // } else {
+    //     console.log("Correct ans:", ans)
+    //     setAverageScore(100 * ans / 8)
+    //     // setOpen(true);
     }
     return () => {
       clearInterval(interval);
@@ -562,22 +596,10 @@ To [C]win some or learn some`,
     formatTab(verseIndex);
   }, [verseIndex]);
 
-  useEffect(() => {
-    let interval = null;
-    if (isPlaying) {
-      interval = setInterval(() => {
-        setAverageScore(averageScore + 1);
-      }, 1586);
-    }
 
-    return () => {
-      clearInterval(interval);
-    };
-  }, [isPlaying, averageScore]);
-
-  useEffect(() => {
-    setAverageScore(averageScore + 1);
-  }, [isPlaying]);
+//   useEffect(() => {
+//     setAverageScore(averageScore + 1);
+//   }, [isPlaying]);
 
   return (
     <Grid container>

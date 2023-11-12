@@ -304,8 +304,8 @@ export const Api = () => {
             // console.log("beats elapsed", beats_elapsed);
         }
         // daca nu sunt in perioada care imi trebuie, nu am nevoie sa citesc macar datele de la microfon
-        // if ((beats_elapsed % beats_freq !== 1) && (beats_elapsed % beats_freq !== 2))
-        if (beats_elapsed % beats_freq !== 1)
+        if ((beats_elapsed % beats_freq !== 1) && (beats_elapsed % beats_freq !== 2))
+        // if (beats_elapsed % beats_freq !== 1)
             return;
 
         // ma aflu in perioada corecta
