@@ -84,6 +84,7 @@ export const LastPlayed = ({length = songs.length}) => {
               title={song.title}
               author={song.author}
               score={song.score}
+              songId={index}
             />
             <Grid item xs={12}>
               <hr className="rounded" />

@@ -8,11 +8,12 @@ import { Api } from './components/Api';
 import { Song } from './components/Song';
 import { Summary } from './components/Summary';
 import { MyMusic } from './components/MyMusic';
+import { SongStat } from './components/SongStat';
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <App />,
+    element: <Summary />,
   },
   {
     path: "/api",
@@ -23,20 +24,20 @@ const router = createBrowserRouter([
     element: <Song />,
   },
   {
-    path: "/summary",
-    element: <Summary />,
-  },
-  {
     path: "/mymusic",
     element: <MyMusic />,
+  },
+  {
+    path: "/stats/:songID",
+    element: <SongStat />,
   },
 ]);
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <React.StrictMode>
+  // <React.StrictMode>
     <RouterProvider router={router}/>
-  </React.StrictMode>
+  // </React.StrictMode>
 );
 
 // If you want to start measuring performance in your app, pass a function
