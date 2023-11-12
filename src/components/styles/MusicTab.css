@@ -1,29 +1,28 @@
 .container {
-	padding: 10px;
+  padding: 10px;
 }
 
 .tab {
-font-family: "Roboto", sans-serif;
-font-size: 0.95rem;
-font-weight: 600;
-line-height: 30px;
-letter-spacing: 0em;
-text-align: left;
-background-color: #F9F8F8;
-border-radius: 10px;
-padding: 10px;
-padding-left: 20px;
-padding-right: 20px;
+  font-family: "Roboto", sans-serif;
+  font-size: 0.95rem;
+  font-weight: 600;
+  line-height: 30px;
+  letter-spacing: 0em;
+  text-align: left;
+  background-color: #f9f8f8;
+  border-radius: 10px;
+  padding: 10px;
+  padding-left: 20px;
+  padding-right: 20px;
 }
 
 .bpm {
   font-family: "Roboto", sans-serif;
-font-size: 1rem;
-font-weight: 600;
-line-height: 30px;
-letter-spacing: 0em;
-text-align: left;
-
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 30px;
+  letter-spacing: 0em;
+  text-align: left;
 }
 
 .button {
@@ -43,13 +42,13 @@ text-align: left;
 }
 
 .scoreDiv {
-font-family: "Roboto", sans-serif;
-font-size: 1.5rem;
-font-weight: 600;
-line-height: 30px;
-letter-spacing: 0em;
-text-align: center;
-margin-top: 20px;
+  font-family: "Roboto", sans-serif;
+  font-size: 1.5rem;
+  font-weight: 600;
+  line-height: 30px;
+  letter-spacing: 0em;
+  text-align: center;
+  margin-top: 20px;
 }
 
 .tryagainBtn {
@@ -66,4 +65,12 @@ margin-top: 20px;
   border: 0;
   border-radius: 10px;
   /* margin-top: 70px; */
+}
+
+.validationColorOk {
+  background-color: rgba(159, 248, 218, 0.211);
+}
+
+.validationColorNotOk {
+  background-color: rgba(216, 112, 147, 0.108);
 }
