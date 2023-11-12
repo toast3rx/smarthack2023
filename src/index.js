@@ -8,7 +8,7 @@ import { Api } from './components/Api';
 import { Song } from './components/Song';
 import { Summary } from './components/Summary';
 import { MyMusic } from './components/MyMusic';
-
+import { SongStat } from './components/SongStat';
 const router = createBrowserRouter([
   {
     path: "/",
@@ -25,6 +25,10 @@ const router = createBrowserRouter([
   {
     path: "/summary",
     element: <Summary />,
+  },
+  {
+    path: "/stats/:songID",
+    element: <SongStat/>
   },
   {
     path: "/mymusic",

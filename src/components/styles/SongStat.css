@@ -1,0 +1,40 @@
+.songTitle {
+    font-family: "Roboto", sans-serif;
+    font-weight: 600;
+    line-height: 38.73px;
+    font-size: 2.5rem;
+}
+
+.author {
+	font-family: "Roboto", sans-serif;
+font-size: 1.2rem;
+font-style: italic;
+font-weight: 600;
+line-height: 15px;
+letter-spacing: 0em;
+text-align: left;
+
+}
+
+.horizontal-bar {
+    background-color: grey; /* Set background color */
+    height: 2px; /* Set the height of the bar */
+    width: 100%;
+    margin: 3px;
+    opacity: 50%;
+}
+
+.songs-container {
+	background: #F9F8F8;
+	border: solid;
+	border-width: 1px;
+	border-color: #F9F8F8;
+	border-radius: 10px;
+	margin-top: 20px;
+	padding: 8px;
+}
+
+.rounded {
+  border-top: 2px solid #bbb;
+  border-radius: 5px;
+}
