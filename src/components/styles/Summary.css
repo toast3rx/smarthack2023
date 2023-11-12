@@ -1,44 +1,48 @@
 .date {
-  font-family: "Roboto", sans-serif;
-  font-weight: 200;
+  font-family: "Inter", sans-serif;
+  font-size: 10px;
   font-style: italic;
-  line-height: 12.1px;
-  font-size: 1rem;
+  font-weight: 200;
+  line-height: normal;
+  letter-spacing: 0em;
+  text-align: left;
   color: grey;
-  margin-left: 20px;
 }
 
 .summary {
-  font-family: "Roboto", sans-serif;
-  font-weight: 600;
-  line-height: 38.73px;
-  font-size: 2.5rem;
+  font-family: "Inter";
+  font-weight: 500;
+  font-style: normal;
+  line-height: normal;
+  font-size: 32px;
 }
 
 .activity {
   margin-top: 20px;
-  font-family: "Roboto", sans-serif;
+  font-family: "Inter";
   font-weight: 600;
   line-height: 17px;
-  font-size: 1.3rem;
+  font-size: 14px;
+  font-style: normal;
 }
 
 .last-played {
-  font-family: "Roboto", sans-serif;
-  font-size: 1.3rem;
-  font-weight: 700;
-  line-height: 17px;
-  letter-spacing: 0em;
-  text-align: left;
+  margin-top: 20px;
+  font-family: "Inter";
+  font-weight: 600;
+  font-size: 17px;
+  font-style: normal;
+  width: 179px;
+  height: 20px;
 }
 
 .button-play {
-  background-color: #7fbeec9d;
+  background-color: #7fbeec;
   color: #f9f8f8;
-  font-family: "Roboto", sans-serif;
-  font-size: 1.2rem;
-  font-weight: 600;
-  line-height: 17px;
+  font-family: "Inter", sans-serif;
+  font-size: 14px;
+  font-weight: 550;
+  line-height: 16px;
   letter-spacing: 0em;
   text-align: center;
   padding: 15px;

@@ -1,31 +1,31 @@
 .songtitle {
-  font-family: "Roboto", sans-serif;
-  font-size: 1.2rem;
-  font-weight: 700;
+  font-family: "Inter", sans-serif;
+  font-size: 14px;
+  font-weight: 500;
   line-height: 17px;
   letter-spacing: 0em;
   text-align: left;
 }
 
 .author {
-  font-family: Inter;
-  font-size: 1.1rem;
+  font-family: "Inter";
+  font-size: 10px;
   font-style: italic;
-  font-weight: 200;
+  font-weight: 500;
   line-height: 12px;
   letter-spacing: 0em;
   text-align: left;
   color: grey;
-  margin-top: 5px;
+  margin-top: 8px;
 }
 
 .score {
-font-family: "Roboto", sans-serif;
-  font-size: 1rem;
+font-family: "Inter";
+  font-size: 10px;
   font-weight: 550;
   line-height: 17px;
-  letter-spacing: 0em;
+  /* letter-spacing: 0em; */
   text-align: left;
-  margin-top: 5px;
+  margin-top: 10px;
   float: right;
 }
