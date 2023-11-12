@@ -3,14 +3,10 @@ import "./styles/MusicTab.css";
 import MusicNoteIcon from "@mui/icons-material/MusicNote";
 import { useEffect, useState } from "react";
 import { Button } from "@mui/base";
+import { clear } from "localforage";
 
 export const MusicTab = ({ bpm, seconds }) => {
   const tabBckup = [
-    `Before the [G]cool done run out, I'll be givin' it my bestest
-and [D]nothin's gonna stop me but divine intervention
-I [Em]reckon it's again my turn
-To [C]win some or learn some`,
-
     `But [G]I won't hesi[D]tate
 No more, no [Em]more
 It cannot [C]wait; I'm you[G]rs  [D]    [Em]     [C]`,
@@ -43,22 +39,22 @@ This is our [C]fate, I'm yours`,
   let chordMap = new Map();
 
   const [chordIndex, setChordIndex] = useState(0);
-
-  const [verseIndex, setVerseIndex] = useState(0);
+  const [verseIndex, setVerseIndex] = useState(-1);
 
   const [open, setOpen] = useState(false);
   const handleClose = () => {
     setOpen(false);
   };
 
-  const [isPlaying, setIsPlaying] = useState(false);
-
+  //////////////////////////////////
+  //// Format tab into an array/////
+  //////////////////////////////////
   const formatTab = (index) => {
     let array = [];
 
     chordMap.clear();
 
-    setTab(tabBckup[index].split("\n"));
+    if (tabBckup[index] !== undefined) setTab(tabBckup[index].split("\n"));
 
     for (let i = 0; i < tab.length; i++) {
       let index;
@@ -100,39 +96,60 @@ This is our [C]fate, I'm yours`,
     setFormatedTab(array);
   };
 
-  const playStart = () => {
-    setIsPlaying(true);
-    console.log("play");
-  }
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [buttonClicked, setButtonClicked] = useState(false);
+  const [timer, setTimer] = useState(3);
 
+  const [buttonText, setButtonText] = useState("Start");
+
+  /////////////////////////////////////////////
+  //////  Start timer after button click //////
+  /////////////////////////////////////////////
   useEffect(() => {
-    //Implementing the setInterval method
-    const interval = setInterval(() => {
-      if (isPlaying) setChordIndex((chordIndex + 1) % chordMap.length);
-    }, 2000);
-
-    //Clearing the interval
+    let interval = null;
+    if (buttonClicked) {
+      interval = setInterval(() => {
+        if (timer > 1) {
+          setButtonText(timer - 1);
+          setTimer(timer - 1);
+        }
+        if (timer === 1) {
+          clearInterval(interval);
+          setIsPlaying(true);
+          setButtonClicked(false);
+          setButtonText("Listening...");
+        }
+      }, 1000);
+    }
     return () => {
       clearInterval(interval);
     };
-  }, [chordIndex]);
+  }, [buttonClicked, timer]);
 
+  /////////////////////////////////////////////
+  //////  Change tabs //////
+  /////////////////////////////////////////////
   useEffect(() => {
-    //Implementing the setInterval method
-    const interval = setInterval(() => {
-      setChordIndex(0);
-      if (isPlaying) setVerseIndex((verseIndex + 1) % tabBckup.length);
-    }, seconds);
-
-    //Clearing the interval
+    let interval = null;
+    if (isPlaying) {
+      if (verseIndex === 0) setVerseIndex(verseIndex + 1);
+      interval = setInterval(() => {
+        if (verseIndex < tabBckup.length) {
+          setVerseIndex(verseIndex + 1);
+        } else {
+          setIsPlaying(false);
+          clearInterval(interval);
+        }
+      }, 1000);
+    }
     return () => {
-      if (verseIndex === tabBckup.length - 1) {
-        setIsPlaying(false);
-      }
-      clearInterval(1000);
+      clearInterval(interval);
     };
-  }, [verseIndex]);
+  }, [isPlaying, verseIndex]);
 
+  /////////////////////////////////////////////
+  //////  Format tab //////
+  /////////////////////////////////////////////
   useEffect(() => {
     formatTab(verseIndex);
   }, [verseIndex]);
@@ -146,18 +163,20 @@ This is our [C]fate, I'm yours`,
       </Grid>
       <Grid item xs={12}>
         <p className="tab" style={{ whiteSpace: "pre-wrap" }}>
-          {formatedTab.map((row, index) => {
-            if (index === chordIndex) {
-              return <span style={{ color: "red" }}>{row}</span>;
-            } else {
-              return row;
-            }
-          })}
+          {formatedTab}
         </p>
       </Grid>
 
       <Grid item xs={12}>
-        <button className="button" onClick={playStart}> Start </button>
+        <button
+          className="button"
+          onClick={() => {
+            setButtonClicked(true);
+            setButtonText(timer);
+          }}
+        >
+          {buttonText}
+        </button>
       </Grid>
     </Grid>
   );
