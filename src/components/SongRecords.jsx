@@ -76,45 +76,6 @@ const songs = [
   },
 ];
 
-
-// const records = [
-//     {
-//       title: "Kilobita Mea",
-//       info: [
-//         {
-//           date: "11 September",
-//           score: 97,
-//         },
-//         {
-//           date: "7 September",
-//           score: 89,
-//         },
-//         {
-//           date: "5 September",
-//           score: 83,
-//         },      {
-//           date: "3 September",
-//           score: 79,
-//         },      {
-//           date: "2 September",
-//           score: 73,
-//         },      {
-//           date: "31 October",
-//           score: 71,
-//         },
-//         {
-//           date: "29 October",
-//           score: 67,
-//         },
-//         {
-//           date: "23 October",
-//           score: 61,
-//         },
-        
-//       ]
-//     }
-//   ]
-  
 export const SongRecords = ({length = 3, songID = 0}) => {
   
   return (
