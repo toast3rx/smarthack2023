@@ -28,7 +28,7 @@ waves are then compared with the correct
 frequencies. 
 
 At the end of the session, the data are analized 
-and saved in the database, then displayed all
+and saved in the database, and finally displayed all
 over the app.
 
 ## How to Run
