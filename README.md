@@ -44,3 +44,11 @@ npm install
 npm start
 ```
 When playing, make sure the devide can hear the song clearly!
+
+## What's Next?
+We plan on improving this application by adding more
+trackable parameters (such as nuances) and displaying separate statistics based on the parameter of choice.
+
+Another step would be making the tempo customable.
+
+Lastly, more instruments would largen the horizon for the users and help them improve even more.
