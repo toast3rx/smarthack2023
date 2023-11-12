@@ -1,19 +1,80 @@
 import { Divider, Grid } from "@mui/material";
 import "./styles/LastPlayed.css";
 import { SongItem } from "./SongItem";
-import { useEffect, useState } from "react";
-
-export const LastPlayed = ({length = -1}) => {
-  const [songs, setSongs] = useState([]);
-  useEffect(() => {
-      try {
-        fetch("http://127.0.0.1:8000/api/v1/songs").then(data => data.json()).then(songgs => setSongs(songgs.data.songs));
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
-      if (length == -1)
-        length = songs.length;
-  }, []);
+const songs = [
+  {
+    title: "I'm yours",
+    author: "Jason Mraz",
+    score: "65%",
+  },
+  {
+    title: "Kilobita mea",
+    author: "Fara zahar",
+    score: "90%",
+  },
+  {
+    title: "Someone You Loved",
+    author: "Lewis Capaldi",
+    score: "34%",
+  },
+  {
+    title: "Dragostea din Tei",
+    author: "O-Zone",
+    score: "87%",
+  },
+  {
+    title: "Wonderwall",
+    author: "Oasis",
+    score: "33",
+  },
+  {
+    title: "LIke a Rolling Stone",
+    author: "Bob Dylan",
+    score: "84%",
+  },
+  {
+    title: "Believer",
+    author: "Imagine Dragons",
+    score: "45%",
+  },
+  {
+    title: "Shape of You",
+    author: "Ed Sheeran",
+    score: "23%",
+  },
+  {
+    title: "Für Elise",
+    author: "Ludwig van Beethoven",
+    score: "82%",
+  },
+  {
+    title: "Hallelujah",
+    author: "Leonard Cohen",
+    score: "57%",
+  },
+  {
+    title: "Stairway to Heaven",
+    author: "Led Zeppelin",
+    score: "76%",
+  },
+  {
+    title: "I want to Hold Your Hand",
+    author: "The Beatles",
+    score: "40%",
+  },
+  {
+    title: "Purple Haze",
+    author: "Jimi Hendrix",
+    score: "62%",
+  },
+  {
+    title: "Rolling in the Deep",
+    author: "Adele",
+    score: "92",
+  },
+];
+export const LastPlayed = ({length = songs.length}) => {
+  
   return (
     <Grid container className="songs-container">
       {songs.slice(0, length).map((song, index) =>
@@ -23,7 +84,7 @@ export const LastPlayed = ({length = -1}) => {
               title={song.title}
               author={song.author}
               score={song.score}
-              songId={index}
+              id = {index}
             />
             <Grid item xs={12}>
               <hr className="rounded" />
@@ -34,6 +95,7 @@ export const LastPlayed = ({length = -1}) => {
             title={song.title}
             author={song.author}
             score={song.score}
+            id = {index}
           />
         )
       )}
