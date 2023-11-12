@@ -123,7 +123,8 @@ export const Summary = () => {
               onClick={() => navigate("/mymusic")}
               className="button-play"
             >
-              Start Playing
+              See All
+              
             </button>
           </Grid>
         </Grid>
